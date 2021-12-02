@@ -54,7 +54,9 @@
         body,
         h1,
         h2,
+        h2bright,
         h3,
+        h3bright,
         p,
         footer {
             font-family: -apple-system, BlinkMacSystemFont, sans-serif;
@@ -64,7 +66,7 @@
             padding: 0;
             margin: 0;
             color: white;
-            font-weight: 500;
+            font-weight: 700;
             font-size: clamp(10px, 8vw, 50px);
         }
 
@@ -76,10 +78,26 @@
             font-size: clamp(10px, 5vw, 42px);
         }
 
+        h2bright {
+            padding: 0;
+            margin: 0;
+            color: white;
+            font-weight: 700;
+            font-size: clamp(10px, 5vw, 42px);
+        }
+
         h3 {
             font-size: clamp(10px, 4.2vw, 38px);
             font-weight: 500;
             color: white;
+            padding: 0;
+            margin: 0;
+        }
+
+        h3bright {
+            font-size: clamp(10px, 4.2vw, 38px);
+            font-weight: 500;
+            color: #0093FF;
             padding: 0;
             margin: 0;
         }
@@ -116,6 +134,10 @@
                 background-color: #363636;
             }
 
+            a.bright_cell:hover {
+                background-color: #429EFF;
+            }
+
             a.cell:hover .arrow {
                 border: solid white;
                 border-width: 0 clamp(2px, 1vw, 5px) clamp(2px, 1vw, 5px) 0;
@@ -136,6 +158,18 @@
             flex: 1 1 auto;
             border-radius: 16px;
             background-color: #181818;
+            transition: background-color 200ms;
+            margin: 0 clamp(2px, 1vw, 6px);
+            padding: 16px clamp(8px, 4vw, 20px);
+        }
+
+        .bright_cell {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex: 1 1 auto;
+            border-radius: 16px;
+            background-color: #0093FF;
             transition: background-color 200ms;
             margin: 0 clamp(2px, 1vw, 6px);
             padding: 16px clamp(8px, 4vw, 20px);
@@ -208,19 +242,19 @@
                 <a class="cell centered" id="deeplink">
                     <h2>👀 Open App</h2>
                 </a>
-                <a class="cell centered" href="https://tokenary.io/macos">
-                    <h2>🤝 Download</h2>
+                <a class="bright_cell centered" href="https://tokenary.io/macos">
+                    <h2bright>🤝 Download</h2bright>
                 </a>
             </div>
             <div class="row">
                 <a class="cell centered" href="https://tokenary.io/github" target="_blank">
-                    <h3>✨ GitHub</h3>
+                    <h3bright>🛠 GitHub</h3bright>
                 </a>
                 <a class="cell centered" href="https://tokenary.io/twitter" target="_blank">
-                    <h3>🐣 Twitter</h3>
+                    <h3bright>🐤 Twitter</h3bright>
                 </a>
                 <a class="cell centered" href="mailto:support@tokenary.io" target="_blank">
-                    <h3>💌 Email</h3>
+                    <h3bright>💌 Email</h3bright>
                 </a>
             </div>
             <div class="row">
