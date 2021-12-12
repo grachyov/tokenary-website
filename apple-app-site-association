@@ -5,10 +5,6 @@
             {
                 "appID": "XWNXDSM6BU.mac.tokenary.io",
                 "paths": ["/wc"]
-            },
-            {
-                "appID": "XWNXDSM6BU.ios.tokenary.io",
-                "paths": ["/injected"]
             }
         ]
     }
