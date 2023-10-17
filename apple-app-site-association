@@ -4,7 +4,7 @@
         "details": [
             {
                 "appID": "XWNXDSM6BU.mac.tokenary.io",
-                "paths": ["/wc", "/extension"]
+                "paths": ["/extension"]
             }
         ]
     }
