@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Tokenary</title>
+    <title>tiny wallet</title>
     <link rel="shortcut icon" type="image/png" href="favicon.png" />
 
     <style>
@@ -159,8 +159,8 @@
             border-radius: 16px;
             background-color: #181818;
             transition: background-color 200ms;
-            margin: 0 clamp(2px, 1vw, 6px);
-            padding: 16px clamp(8px, 4vw, 20px);
+            margin: 1px clamp(2px, 1vw, 6px);
+            padding: 18px clamp(8px, 4vw, 20px);
         }
 
         .bright_cell {
@@ -171,8 +171,8 @@
             border-radius: 16px;
             background-color: #0093FF;
             transition: background-color 200ms;
-            margin: 0 clamp(2px, 1vw, 6px);
-            padding: 16px clamp(8px, 4vw, 20px);
+            margin: 1px clamp(2px, 1vw, 6px);
+            padding: 18px clamp(8px, 4vw, 20px);
         }
 
         .centered {
@@ -227,49 +227,52 @@
             <div class="row">
                 <div class="cell">
                     <div class="title-logo">
-                        <img src="./icon.png" class="logo" />
+                        <img src="/icon.png" class="logo" />
                         <div>
-                            <h1>Tokenary</h1>
-                            <p>Crypto wallet for  Safari</p>
+                            <h1>tiny wallet</h1>
+                            <p>crypto wallet for  safari</p>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <a class="cell centered" href="https://tokenary.io/github" target="_blank">
-                    <h3bright>🛠 GitHub</h3bright>
+                <a class="bright_cell centered" href="https://tokenary.io/macos">
+                    <h2bright>🤝 download</h2bright>
                 </a>
-                <a class="cell centered" href="https://tokenary.io/x" target="_blank">
-                    <h3bright>🐤 𝕏</h3bright>
+            </div>
+            <div class="row">
+                <a class="cell centered" href="https://tokenary.io/github" target="_blank">
+                    <h3bright>🛠 github</h3bright>
                 </a>
                 <a class="cell centered" href="mailto:support@tokenary.io" target="_blank">
-                    <h3bright>💌 Email</h3bright>
+                    <h3bright>💌 email</h3bright>
+                </a>
+                <a class="cell centered" href="http://warpcast.com/org" target="_blank">
+                    <h3bright>🟣 fc</h3bright>
+                </a>
+                <a class="cell centered" href="https://tokenary.io/x" target="_blank">
+                    <h3bright>🐤 x</h3bright>
                 </a>
             </div>
             <div class="row">
                 <div class="cell">
-                    <h3>🚀 How to proceed?</h3>
-                    <p>Сlick the "open" button at the top of the page.</p>
+                    <h3>👀 how to proceed?</h3>
+                    <p>click the “open” button at the top of the page</p>
                 </div>
             </div>
             <div class="row">
                 <div class="cell">
-                    <h3>🤔 What if there is no button?</h3>
-                    <p>Please restart your device.<br>Everything will work properly after that.</p>
+                    <h3>👻 what if there is no button?</h3>
+                    <p>this is bad – please let us know about it<br>restart your device for a possible fix</p>
                 </div>
             </div>
             <footer>
                 <div class="row centered">
-                    © 2023 Tokenary.
+                    ©© ∅ 2024 lil.org
                 </div>
             </footer>
         </div>
     </div>
-    <script>
-        const searchParams = new URLSearchParams(window.location.search);
-        document.getElementById("deeplink").href =
-            `tokenary://wc?uri=${searchParams.get('uri')}`;
-    </script>
 </body>
 
 </html>

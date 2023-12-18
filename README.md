@@ -1,1 +1,1 @@
-# Tokenary Website
+# tiny wallet website
