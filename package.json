@@ -1,0 +1,22 @@
+{
+  "name": "tokenary-dot-io",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "check": "wrangler deploy --dry-run",
+    "types": "wrangler types ./src/worker-configuration.d.ts",
+    "startup": "wrangler check startup",
+    "preview": "wrangler versions upload --preview-alias migration",
+    "deploy": "wrangler deploy",
+    "smoke": "node scripts/smoke.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "26.1.1",
+    "wrangler": "4.112.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

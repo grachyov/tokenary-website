@@ -1,0 +1,15 @@
+/.git/
+/.wrangler/
+/.DS_Store
+/.gitignore
+/.assetsignore
+/.dev.vars*
+/.env*
+/src/
+/scripts/
+/node_modules/
+/package.json
+/package-lock.json
+/wrangler.jsonc
+/worker-configuration.d.ts
+/worker-startup.cpuprofile
