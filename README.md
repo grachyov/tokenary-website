@@ -30,7 +30,7 @@ or add the token to a Wrangler configuration file.
 ```sh
 npm run check
 npm run preview
-npm run smoke -- https://migration-tokenary-dot-io.lil-org.workers.dev
+npm run smoke -- https://migration-tokenary-io.lil-org.workers.dev
 npm run deploy
 npm run smoke -- https://tokenary.io --production
 ```
