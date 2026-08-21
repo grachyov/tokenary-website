@@ -234,6 +234,55 @@
       .site-footer__link.is-fitted {
         visibility: visible;
       }
+
+      @media (prefers-color-scheme: light) {
+        body {
+          background-color: #ffffff;
+          color: #1c1c1e;
+        }
+
+        h1,
+        h3 {
+          color: #1c1c1e;
+        }
+
+        h2,
+        h3bright,
+        .link,
+        .site-footer__link {
+          color: #007aff;
+        }
+
+        p {
+          color: #3a3a3c;
+        }
+
+        .cell {
+          background-color: #f7f7f8;
+        }
+
+        .bright_cell {
+          background-color: #007aff;
+        }
+
+        .arrow {
+          border-color: #3a3a3c;
+        }
+      }
+
+      @media (prefers-color-scheme: light) and (hover: hover) and (pointer: fine) {
+        a.cell:hover {
+          background-color: #f7f7f8;
+        }
+
+        a.bright_cell:hover {
+          background-color: #007aff;
+        }
+
+        a.cell:hover .arrow {
+          border-color: #1c1c1e;
+        }
+      }
     </style>
   </head>
 
