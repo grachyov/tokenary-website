@@ -1,0 +1,23 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="1024"
+  height="1024"
+  viewBox="0 0 1024 1024"
+  fill="none"
+>
+  <rect width="1024" height="1024" rx="229" fill="white" />
+  <circle cx="512" cy="512" r="315" fill="url(#circle-gradient)" />
+  <defs>
+    <linearGradient
+      id="circle-gradient"
+      x1="512"
+      y1="197"
+      x2="512"
+      y2="827"
+      gradientUnits="userSpaceOnUse"
+    >
+      <stop stop-color="#62CCF9" />
+      <stop offset="1" stop-color="#007AFF" />
+    </linearGradient>
+  </defs>
+</svg>

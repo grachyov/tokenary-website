@@ -139,6 +139,8 @@ async function expectFile(path, filename, contentType) {
     readFile(new URL(`../${filename}`, import.meta.url)),
   ]);
   const body = Buffer.from(await response.arrayBuffer());
+  const contentTypes = Array.isArray(contentType) ? contentType : [contentType];
+  const responseContentType = response.headers.get("content-type");
 
   record(
     response.status === 200,
@@ -146,17 +148,56 @@ async function expectFile(path, filename, contentType) {
     `received ${response.status}`,
   );
   record(
-    response.headers.get("content-type")?.includes(contentType) ?? false,
-    `${path} has ${contentType} content`,
-    `received ${response.headers.get("content-type")}`,
+    contentTypes.some((candidate) => responseContentType?.includes(candidate)),
+    `${path} has ${contentTypes.join(" or ")} content`,
+    `received ${responseContentType}`,
   );
   record(body.equals(expected), `${path} matches ${filename}`);
+}
+
+const ICON_HREFS = [
+  "/favicon.ico",
+  "/favicon-32x32.png",
+  "/favicon-16x16.png",
+  "/favicon.svg",
+  "/apple-touch-icon.png",
+];
+
+async function expectIconLinks(path) {
+  const response = await fetchManual(path);
+  const body = await response.text();
+
+  for (const href of ICON_HREFS) {
+    record(body.includes(`href="${href}"`), `${path} links to ${href}`);
+  }
+
+  record(!body.includes("shortcut icon"), `${path} uses standard icon links`);
 }
 
 await expectHtml("/", 200, "<title>tokenary</title>");
 await expectFile("/index.html", "index.html", "text/html");
 await expectFile("/README.md", "README.md", "text/markdown");
 await expectFile("/LICENSE.txt", "LICENSE.txt", "text/plain");
+await expectFile("/favicon.ico", "favicon.ico", [
+  "image/vnd.microsoft.icon",
+  "image/x-icon",
+]);
+await expectFile("/favicon.svg", "favicon.svg", "image/svg+xml");
+await expectFile(
+  "/favicon-16x16.png",
+  "favicon-16x16.png",
+  "image/png",
+);
+await expectFile(
+  "/favicon-32x32.png",
+  "favicon-32x32.png",
+  "image/png",
+);
+await expectFile(
+  "/apple-touch-icon.png",
+  "apple-touch-icon.png",
+  "image/png",
+);
 await expectFile("/favicon.png", "favicon.png", "image/png");
 await expectFile("/icon.png", "icon.png", "image/png");
 
@@ -229,6 +270,8 @@ for (const path of ["/blank", "/blank/", "/blank/example", "/blank/example/"]) {
   await expectFile(path, "blank.html", "text/html");
 }
 
+await expectIconLinks("/blank/example/");
+
 for (const path of [
   "/extension",
   "/extension/",
@@ -237,6 +280,9 @@ for (const path of [
 ]) {
   await expectFile(path, "extension.html", "text/html");
 }
+
+await expectIconLinks("/");
+await expectIconLinks("/extension/example/");
 
 const externalRedirects = [
   ["/support?probe=1", "https://x.com/lildotorg?probe=1"],
