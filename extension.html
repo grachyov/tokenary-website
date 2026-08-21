@@ -59,8 +59,7 @@
       h2bright,
       h3,
       h3bright,
-      p,
-      footer {
+      p {
         font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       }
 
@@ -102,14 +101,6 @@
         color: #4b9ef5;
         padding: 0;
         margin: 0;
-      }
-
-      footer {
-        font-size: clamp(10px, 10vw, 93px);
-        color: #4b9ef5;
-        white-space: nowrap;
-        font-weight: 800;
-        margin-top: 15px;
       }
 
       p {
@@ -224,6 +215,25 @@
         width: 200px;
         height: 200px;
       }
+
+      .site-footer {
+        margin: 15px 10px 0;
+      }
+
+      .site-footer__link {
+        display: inline-block;
+        color: #4b9ef5;
+        font-size: 1px;
+        font-weight: 800;
+        line-height: 1;
+        padding-bottom: 0.12em;
+        white-space: nowrap;
+        visibility: hidden;
+      }
+
+      .site-footer__link.is-fitted {
+        visibility: visible;
+      }
     </style>
   </head>
 
@@ -296,18 +306,40 @@
             </p>
           </div>
         </div>
-        <footer>
-          <div class="row centered">
-            <a href="https://lil.org"
-              >©© ∅
-              <script>
-                document.write(new Date().getFullYear());
-              </script>
-              lil.org</a
-            >
-          </div>
+        <footer class="site-footer">
+          <a class="site-footer__link" href="https://lil.org"
+            ><span data-current-year></span> lil.org</a
+          >
         </footer>
       </div>
     </div>
+    <script>
+      const footer = document.querySelector(".site-footer");
+      const footerText = footer.querySelector(".site-footer__link");
+
+      footerText.querySelector("[data-current-year]").textContent =
+        new Date().getFullYear();
+
+      const fitFooterText = () => {
+        const referenceSize = 100;
+        footerText.style.fontSize = `${referenceSize}px`;
+
+        const naturalWidth = footerText.getBoundingClientRect().width;
+        if (naturalWidth === 0) return;
+
+        footerText.style.fontSize = `${
+          (referenceSize * footer.clientWidth) / naturalWidth
+        }px`;
+        footerText.classList.add("is-fitted");
+      };
+
+      fitFooterText();
+
+      if ("ResizeObserver" in window) {
+        new ResizeObserver(fitFooterText).observe(footer);
+      } else {
+        window.addEventListener("resize", fitFooterText);
+      }
+    </script>
   </body>
 </html>
