@@ -1,3 +1,9 @@
+/
+  Link: </llms.txt>; rel="describedby"
+
+/index.html
+  Link: </llms.txt>; rel="describedby"
+
 /apple-app-site-association
   Content-Type: application/json
 

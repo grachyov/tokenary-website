@@ -17,5 +17,5 @@ Apple Keychain for wallet storage.
 ## Sources
 
 - [Big Wallet source code](https://github.com/lil-org/big-wallet): Public source repository.
-- [English App Store name and subtitle](https://github.com/lil-org/big-wallet/blob/main/app-store-connect/localizations/app-info/en-US.strings): Product naming metadata.
-- [English App Store description](https://github.com/lil-org/big-wallet/blob/main/app-store-connect/localizations/version/en-US.strings): Product capabilities and support metadata.
+- [English App Store name and subtitle](https://raw.githubusercontent.com/lil-org/big-wallet/main/app-store-connect/localizations/app-info/en-US.strings): Product naming metadata.
+- [English App Store description](https://raw.githubusercontent.com/lil-org/big-wallet/main/app-store-connect/localizations/version/en-US.strings): Product capabilities and support metadata.

@@ -194,6 +194,19 @@ async function expectDiscovery() {
   const homepage = await expectFile("/", "index.html", "text/html");
   await expectPublicAccess("/", "text/html", homepage);
 
+  for (const path of ["/", "/index.html"]) {
+    for (const method of ["GET", "HEAD"]) {
+      const response = await fetchManual(path, { method });
+      const link = response.headers.get("link");
+      record(response.status === 200, `${method} ${path} returns 200`);
+      record(
+        link === '</llms.txt>; rel="describedby"',
+        `${method} ${path} advertises the agent overview exactly once`,
+        `received ${link}`,
+      );
+    }
+  }
+
   const html = homepage.toString("utf8");
   const head = html.match(/<head>([\s\S]*?)<\/head>/)?.[1] ?? "";
   record(/<html\s+lang="en">/.test(html), "homepage declares English");
@@ -276,6 +289,24 @@ async function expectDiscovery() {
   record(
     links.length === 6 && links.some((match) => match[1].endsWith("version/en-US.strings")),
     "llms.txt includes annotated HTTPS product, support, and metadata links",
+  );
+  for (const section of ["app-info", "version"]) {
+    const sourceUrl = `https://raw.githubusercontent.com/lil-org/big-wallet/main/app-store-connect/localizations/${section}/en-US.strings`;
+    record(
+      links.some((match) => match[1] === sourceUrl),
+      `llms.txt links directly to raw ${section} metadata`,
+    );
+  }
+}
+
+async function expectUtilityPage(path, filename) {
+  const body = await expectFile(path, filename, "text/html");
+  const robotTags = [...body.toString("utf8").matchAll(/<meta\b[^>]*>/gi)]
+    .map(([tag]) => tag)
+    .filter((tag) => /\bname\s*=\s*["']robots["']/i.test(tag));
+  record(
+    robotTags.length === 1 && /\bcontent\s*=\s*["']noindex["']/i.test(robotTags[0]),
+    `${path} declares noindex while remaining accessible`,
   );
 }
 
@@ -391,19 +422,20 @@ for (const path of ["/t-app-configuration.json", "/t-app-configuration"]) {
 await expectFile("/privacy_policy.pdf", "privacy_policy.pdf", "application/pdf");
 await expectFile("/privacy", "privacy_policy.pdf", "application/pdf");
 
-for (const path of ["/blank", "/blank/", "/blank/example", "/blank/example/"]) {
-  await expectFile(path, "blank.html", "text/html");
+for (const path of ["/blank.html", "/blank", "/blank/", "/blank/example", "/blank/example/"]) {
+  await expectUtilityPage(path, "blank.html");
 }
 
 await expectIconLinks("/blank/example/");
 
 for (const path of [
+  "/extension.html",
   "/extension",
   "/extension/",
   "/extension/example",
   "/extension/example/",
 ]) {
-  await expectFile(path, "extension.html", "text/html");
+  await expectUtilityPage(path, "extension.html");
 }
 
 await expectIconLinks("/");

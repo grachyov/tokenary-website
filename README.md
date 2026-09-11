@@ -32,6 +32,12 @@ which lists only the canonical homepage. These static resources are served
 identically to browsers and crawlers. `llms.txt` is supplementary guidance, not a
 guarantee of indexing or AI citations.
 
+The homepage and `/index.html` advertise `/llms.txt` with an HTTP `Link` header
+using `rel="describedby"`. Its App Store metadata links point directly to raw
+source files. The blank and extension utility pages include `noindex` in their
+HTML templates, covering their direct URLs and all aliases without blocking
+crawling or changing app behavior. The marketing homepage remains indexable.
+
 When Big Wallet's App Store metadata changes, manually review the overview against
 the [English name and subtitle](https://github.com/lil-org/big-wallet/blob/main/app-store-connect/localizations/app-info/en-US.strings),
 [English description](https://github.com/lil-org/big-wallet/blob/main/app-store-connect/localizations/version/en-US.strings),
