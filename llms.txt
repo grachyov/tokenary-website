@@ -1,0 +1,21 @@
+# Tokenary and Big Wallet
+
+> Tokenary is an open-source Safari crypto wallet that evolved into Big Wallet.
+
+Big Wallet for Safari is available on iPhone, iPad, Mac, and Apple Vision.
+Its Safari extension connects wallets to compatible websites offering MetaMask
+or Phantom connections. Supported networks include Ethereum, Solana, Base,
+Polygon, Binance Smart Chain, Optimism, Arbitrum, and Avalanche. Big Wallet uses
+Apple Keychain for wallet storage.
+
+## Products and support
+
+- [Tokenary website](https://tokenary.io/): Tokenary's Safari wallet overview and announcement of its evolution into Big Wallet.
+- [Big Wallet on the App Store](https://apps.apple.com/app/id6478607925): Download Big Wallet and check current availability and device requirements.
+- [Big Wallet support](https://help.lil.org/): Support link from Big Wallet's App Store metadata.
+
+## Sources
+
+- [Big Wallet source code](https://github.com/lil-org/big-wallet): Public source repository.
+- [English App Store name and subtitle](https://github.com/lil-org/big-wallet/blob/main/app-store-connect/localizations/app-info/en-US.strings): Product naming metadata.
+- [English App Store description](https://github.com/lil-org/big-wallet/blob/main/app-store-connect/localizations/version/en-US.strings): Product capabilities and support metadata.

@@ -22,6 +22,34 @@ npm run smoke -- http://127.0.0.1:8787
 deploying. `npm run types` regenerates the Cloudflare binding declarations after
 configuration changes, and `npm run startup` profiles Worker startup.
 
+## Crawler and agent discovery
+
+The homepage includes a canonical URL, English language declaration, description,
+and JSON-LD limited to facts already visible on the page. `/llms.txt` provides a
+concise public overview of Big Wallet as Tokenary's successor. `/robots.txt`
+allows all crawlers, including AI training crawlers, and advertises `/sitemap.xml`,
+which lists only the canonical homepage. These static resources are served
+identically to browsers and crawlers. `llms.txt` is supplementary guidance, not a
+guarantee of indexing or AI citations.
+
+When Big Wallet's App Store metadata changes, manually review the overview against
+the [English name and subtitle](https://github.com/lil-org/big-wallet/blob/main/app-store-connect/localizations/app-info/en-US.strings),
+[English description](https://github.com/lil-org/big-wallet/blob/main/app-store-connect/localizations/version/en-US.strings),
+and [live App Store listing](https://apps.apple.com/app/id6478607925). Confirm the
+platforms, compatible wallet connections, networks, Keychain wording, and linked
+support destination. Attribute current capabilities to Big Wallet; avoid adding
+prices, ratings, versions, unsupported features, or security guarantees. Keep
+homepage structured data consistent with its visible content, then rerun the
+smoke checks and deployment dry run.
+
+At deployment, verify the edge-served `robots.txt` matches the repository file.
+Cloudflare can supply or augment robots responses independently of the Worker.
+If conflicting controls are enabled, turn off managed robots restrictions and
+set Search, Agent, and Training crawler policies to **Allow (do not block)**.
+Also check individual AI crawler Block or Charge rules. Preserve unrelated
+security settings. See Cloudflare's [managed robots documentation](https://developers.cloudflare.com/bots/additional-configurations/managed-robots-txt/)
+and [AI crawler policies](https://developers.cloudflare.com/bots/additional-configurations/block-ai-bots/).
+
 ## Deployment
 
 Wrangler reads authentication from `CLOUDFLARE_API_TOKEN`. Never print, commit,

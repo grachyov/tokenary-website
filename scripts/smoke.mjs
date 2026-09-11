@@ -54,6 +54,7 @@ async function fetchAtIp(url, options) {
       url,
       {
         method: options.method ?? "GET",
+        headers: options.headers,
         lookup(_hostname, lookupOptions, callback) {
           const address = { address: resolveIp, family: isIP(resolveIp) };
           if (lookupOptions?.all) {
@@ -153,6 +154,129 @@ async function expectFile(path, filename, contentType) {
     `received ${responseContentType}`,
   );
   record(body.equals(expected), `${path} matches ${filename}`);
+  return body;
+}
+
+async function expectPublicAccess(path, contentType, expectedBody) {
+  const head = await fetchManual(path, { method: "HEAD" });
+  record(
+    head.status === 200 && head.headers.get("content-type")?.includes(contentType),
+    `HEAD ${path} returns 200 with ${contentType}`,
+    `received ${head.status}, ${head.headers.get("content-type")}`,
+  );
+  record((await head.text()) === "", `HEAD ${path} has no body`);
+
+  for (const userAgent of ["Mozilla/5.0", "Googlebot", "OAI-SearchBot", "GPTBot"]) {
+    const response = await fetchManual(path, {
+      headers: { "User-Agent": userAgent },
+    });
+    const body = Buffer.from(await response.arrayBuffer());
+    record(
+      response.status === 200 &&
+        response.headers.get("content-type")?.includes(contentType) &&
+        body.equals(expectedBody),
+      `${path} serves the same public content to ${userAgent}`,
+      `received ${response.status}, ${response.headers.get("content-type")}`,
+    );
+    if (production) {
+      record(
+        !/\b(?:noindex|nofollow|none|nosnippet)\b/i.test(
+          response.headers.get("x-robots-tag") ?? "",
+        ),
+        `${path} has no restrictive indexing header for ${userAgent}`,
+        response.headers.get("x-robots-tag") ?? "",
+      );
+    }
+  }
+}
+
+async function expectDiscovery() {
+  const homepage = await expectFile("/", "index.html", "text/html");
+  await expectPublicAccess("/", "text/html", homepage);
+
+  const html = homepage.toString("utf8");
+  const head = html.match(/<head>([\s\S]*?)<\/head>/)?.[1] ?? "";
+  record(/<html\s+lang="en">/.test(html), "homepage declares English");
+  const canonicalLinks = [...head.matchAll(/<link\s+rel="canonical"\s+href="([^"]+)"\s*\/>/g)];
+  record(
+    canonicalLinks.length === 1 && canonicalLinks[0][1] === "https://tokenary.io/",
+    "homepage has one canonical link to the HTTPS apex",
+  );
+  const description = head.match(/<meta\s+name="description"\s+content="([^"]+)"\s*\/>/)?.[1];
+  record(
+    description === "Tokenary is an open-source crypto wallet for Safari. It has evolved into Big Wallet.",
+    "homepage description identifies Tokenary and its successor",
+  );
+  record(
+    !/<meta\s+name="(?:robots|googlebot)"[^>]*\b(?:noindex|nofollow|none|nosnippet)\b/i.test(head),
+    "homepage has no restrictive indexing metadata",
+  );
+
+  const blocks = [...head.matchAll(/<script\s+type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
+  record(blocks.length === 1, "homepage contains one JSON-LD block");
+  try {
+    const data = JSON.parse(blocks[0]?.[1] ?? "");
+    record(
+      data["@context"] === "https://schema.org" &&
+        data["@type"] === "WebPage" &&
+        data.url === "https://tokenary.io/" &&
+        data.name === "tokenary" &&
+        data.description === description,
+      "JSON-LD describes the canonical Tokenary page",
+    );
+    record(
+      data.about?.name === "Tokenary" &&
+        data.about?.url === "https://tokenary.io/" &&
+        data.mentions?.name === "Big Wallet" &&
+        data.mentions?.url === "https://apps.apple.com/app/id6478607925" &&
+        data.mentions?.description === "The successor to Tokenary.",
+      "JSON-LD distinguishes Tokenary from its Big Wallet successor",
+    );
+  } catch (error) {
+    record(false, "homepage JSON-LD parses", error.message);
+  }
+
+  const resources = new Map();
+  for (const [filename, contentType] of [
+    ["robots.txt", "text/plain; charset=utf-8"],
+    ["llms.txt", "text/plain; charset=utf-8"],
+    ["sitemap.xml", "application/xml; charset=utf-8"],
+  ]) {
+    const path = `/${filename}`;
+    const body = await expectFile(path, filename, contentType);
+    await expectPublicAccess(path, contentType, body);
+    resources.set(filename, body.toString("utf8"));
+  }
+
+  const directives = resources.get("robots.txt").split(/\r?\n/)
+    .map((line) => line.replace(/#.*/, "").trim()).filter(Boolean);
+  record(
+    JSON.stringify(directives) === JSON.stringify([
+      "User-agent: *", "Allow: /", "Sitemap: https://tokenary.io/sitemap.xml",
+    ]),
+    "robots.txt allows every crawler and advertises the canonical sitemap",
+  );
+
+  const sitemap = resources.get("sitemap.xml");
+  const locations = [...sitemap.matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/g)]
+    .map((match) => match[1]);
+  record(
+    sitemap.includes('xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"') &&
+      locations.length === 1 && locations[0] === "https://tokenary.io/",
+    "sitemap lists only the canonical homepage in the sitemap namespace",
+  );
+
+  const overview = resources.get("llms.txt");
+  record(
+    /^# Tokenary and Big Wallet\r?\n\r?\n> /u.test(overview) &&
+      overview.includes("evolved into Big Wallet"),
+    "llms.txt starts with a title and a summary of the successor relationship",
+  );
+  const links = [...overview.matchAll(/^- \[[^\]]+\]\((https:\/\/[^)]+)\): .+$/gm)];
+  record(
+    links.length === 6 && links.some((match) => match[1].endsWith("version/en-US.strings")),
+    "llms.txt includes annotated HTTPS product, support, and metadata links",
+  );
 }
 
 const ICON_HREFS = [
@@ -175,6 +299,7 @@ async function expectIconLinks(path) {
 }
 
 await expectHtml("/", 200, "<title>tokenary</title>");
+await expectDiscovery();
 await expectFile("/index.html", "index.html", "text/html");
 await expectFile("/README.md", "README.md", "text/markdown");
 await expectFile("/LICENSE.txt", "LICENSE.txt", "text/plain");
